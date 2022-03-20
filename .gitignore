@@ -2,5 +2,7 @@ __pycache__
 .env
 .history
 .hypothesis/
+node_modules/
 build/
 reports/
+venv/
