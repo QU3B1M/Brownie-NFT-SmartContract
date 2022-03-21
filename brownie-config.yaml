@@ -1,16 +1,30 @@
 dependencies:
-  - OpenZeppelin/openzeppelin-contracts@4.2.0
+    - OpenZeppelin/openzeppelin-contracts@4.2.0
 compiler:
-  solc:
-    remappings:
-      - '@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.2.0'
+    solc:
+        remappings:
+            - "@openzeppelin=OpenZeppelin/openzeppelin-contracts@4.2.0"
 dotenv: .env
 networks:
-  development:
-    verify: False
-  ganache:
-    verify: False
-  rinkeby:
-    verify: True
+    development:
+        proxy_address: "0x0000000000000000000000000000000000000000"
+        whitelist_start: "2022-04-01"
+        auction_start: "2022-04-01"
+        verify: False
+    ganache:
+        proxy_address: "0x0000000000000000000000000000000000000000"
+        whitelist_start: "2022-04-01"
+        auction_start: "2022-04-01"
+        verify: False
+    rinkeby:
+        proxy_address: "0x1E525EEAF261cA41b809884CBDE9DD9E1619573A"
+        whitelist_start: ${WHITELIST_START}
+        auction_start: ${AUCTION_START}
+        verify: True
+    mainnet:
+        proxy_address: "0xa5409ec958c83c3f309868babaca7c86dcb077c1"
+        whitelist_start: ${WHITELIST_START}
+        auction_start: ${AUCTION_START}
+        verify: True
 wallets:
-  from_key: ${PRIVATE_KEY}
+    from_key: ${PRIVATE_KEY}
