@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-// Creator: Dysto Team
 
 pragma solidity ^0.8.4;
 
@@ -8,6 +7,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./ERC721A.sol";
 import "./ProxyRegistry.sol";
 
+/// @author QU3B1M.
 contract QBM is ERC721A, Ownable, ReentrancyGuard {
      // Constants: General Configuration
     uint256 public constant MAX_SUPPLY = 40;
@@ -29,7 +29,7 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
         address _proxyRegistryAddress, 
         uint256 _whitelistSaleStartTime,
         uint256 _publicSaleStartTime
-    ) ERC721A("QU3B1M", "QBM") {
+    ) ERC721A("Quebim", "QBM") {
         proxyRegistryAddress = _proxyRegistryAddress;
         whitelistSaleStartTime = _whitelistSaleStartTime;
         publicSaleStartTime = _publicSaleStartTime;

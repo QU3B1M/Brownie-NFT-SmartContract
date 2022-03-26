@@ -2,8 +2,7 @@ import brownie
 import pytest
 from web3 import Web3
 
-from scripts.qbm_deploy import deploy_qbm
-from scripts import helpers
+from scripts import helpers, deploy_contract
 
 
 # ------Fixtures------
@@ -16,7 +15,7 @@ def dev_account():
 
 @pytest.fixture
 def contract():
-    yield deploy_qbm()
+    yield deploy_contract()
 
 
 @pytest.fixture(scope="function")
