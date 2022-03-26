@@ -37,17 +37,17 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
 
     /// @notice Validate if the caller is a usar or another contract.
     modifier callerIsUser() {
-        require(tx.origin == msg.sender, "Quebim: The caller is another contract.");
+        require(tx.origin == msg.sender, "QBM: The caller is another contract.");
         _;
     }
 
     /// @notice Whitelist mint, only callable by whitelisted user.
     function whitelistMint() external payable callerIsUser {
-        require(block.timestamp >= whitelistSaleStartTime,"Quebim: Whitelist sale has not started yet.");
-        require(whitelist[msg.sender] > 0, "Quebim: User has no mints reserved.");
-        require(balanceOf(msg.sender) < MAX_PER_USER, "Quebim: Exceeds the max amount per user.");
-        require(_totalMinted() <= MAX_SUPPLY, "Quebim: Exceeds the max supply.");
-        require(msg.value >= WHITELIST_PRICE, "Quebim: Not enough ETH.");
+        require(block.timestamp >= whitelistSaleStartTime,"QBM: Whitelist sale has not started yet.");
+        require(whitelist[msg.sender] > 0, "QBM: User has no mints reserved.");
+        require(balanceOf(msg.sender) < MAX_PER_USER, "QBM: Exceeds the max amount per user.");
+        require(_totalMinted() <= MAX_SUPPLY, "QBM: Exceeds the max supply.");
+        require(msg.value >= WHITELIST_PRICE, "QBM: Not enough ETH.");
         
         whitelist[msg.sender]--; // Update the user remaining amount.
         _safeMint(msg.sender, 1);
@@ -56,11 +56,11 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
     
     /// @notice Public mint, allows mint several NFTs paying reduced gas.
     function publicMint(uint256 amount) external payable callerIsUser {        
-        require(block.timestamp >= publicSaleStartTime,"Quebim: Public sale has not started yet.");
+        require(block.timestamp >= publicSaleStartTime,"QBM: Public sale has not started yet.");
         uint256 _totalPrice = PUBLIC_PRICE * amount;
-        require(balanceOf(msg.sender) + amount <= MAX_PER_USER, "Quebim: Exceeds the max amount per user.");
-        require(msg.value >= _totalPrice,"Quebim: Not enough ETH.");
-        require(_totalMinted() + amount <= MAX_SUPPLY, "Quebim: Exceeds the max supply.");
+        require(balanceOf(msg.sender) + amount <= MAX_PER_USER, "QBM: Exceeds the max amount per user.");
+        require(msg.value >= _totalPrice,"QBM: Not enough ETH.");
+        require(_totalMinted() + amount <= MAX_SUPPLY, "QBM: Exceeds the max supply.");
 
         _safeMint(msg.sender, amount);
         _refund(_totalPrice);
@@ -68,8 +68,8 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
 
     /// @notice Mint for Marketing/Prizes/Dev purposes.
     function devMint(address _to, uint256 amount) external onlyOwner {
-        require(block.timestamp < whitelistSaleStartTime, "Quebim: Dev mint is over.");
-        require(_totalMinted() + amount <= SUPPLY_FOR_DEVS, "Quebim: Exceeds the mints reserved for devs.");
+        require(block.timestamp < whitelistSaleStartTime, "QBM: Dev mint is over.");
+        require(_totalMinted() + amount <= SUPPLY_FOR_DEVS, "QBM: Exceeds the mints reserved for devs.");
         
         _safeMint(_to, amount);
     }
@@ -77,15 +77,15 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
     /// @notice Withdraw the funds, only callable by contract owner.
     function withdraw() external onlyOwner nonReentrant {
         (bool success, ) = msg.sender.call{value: address(this).balance}("");
-        require(success, "Quebim: Withdraw failed.");
+        require(success, "QBM: Withdraw failed.");
     }
 
     /// @notice Register the seed whitelist, only callable by owner.
-    function seedWhitelist(address[] calldata addresses, uint256[] calldata amounts) external onlyOwner {
-        require(addresses.length > 0, "Quebim: Whitelist is empty.");
-        require(addresses.length == amounts.length, "Quebim: Addresses do not match amounts.");
-        for (uint256 i = 0; i < addresses.length; i++) {
-            whitelist[addresses[i]] = amounts[i];
+    function seedWhitelist(address[] calldata accounts, uint256[] calldata amounts) external onlyOwner {
+        require(accounts.length > 0, "QBM: No accounts provided.");
+        require(accounts.length == amounts.length, "QBM: Amounts and accounts don't match.");
+        for (uint256 i = 0; i < accounts.length; i++) {
+            whitelist[accounts[i]] = amounts[i];
         } 
     }
 
