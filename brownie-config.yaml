@@ -8,23 +8,23 @@ dotenv: .env
 networks:
     development:
         proxy_address: "0x0000000000000000000000000000000000000000"
-        whitelist_start: "2022-04-01 01:00:00+00:00"
-        auction_start: "2022-04-02 01:00:00+00:00"
+        whitelist_sale_start: "2022-04-01 01:00:00+00:00"
+        public_sale_start: "2022-04-02 01:00:00+00:00"
         verify: False
     ganache:
         proxy_address: "0x0000000000000000000000000000000000000000"
-        whitelist_start: "2022-04-01 01:00:00+00:00"
-        auction_start: "2022-04-02 01:00:00+00:00"
+        whitelist_sale_start: "2022-04-01 01:00:00+00:00"
+        public_sale_start: "2022-04-02 01:00:00+00:00"
         verify: False
     rinkeby:
         proxy_address: "0x1E525EEAF261cA41b809884CBDE9DD9E1619573A"
-        whitelist_start: ${WHITELIST_START}
-        auction_start: ${AUCTION_START}
+        whitelist_sale_start: ${WHITELIST_SALE_START}
+        public_sale_start: ${PUBLIC_SALE_START}
         verify: True
     mainnet:
         proxy_address: "0xa5409ec958c83c3f309868babaca7c86dcb077c1"
-        whitelist_start: ${WHITELIST_START}
-        auction_start: ${AUCTION_START}
+        whitelist_sale_start: ${WHITELIST_SALE_START}
+        public_sale_start: ${PUBLIC_SALE_START}
         verify: True
 wallets:
     from_key: ${PRIVATE_KEY}

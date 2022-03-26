@@ -10,12 +10,12 @@ def deploy_qbm():
     if not config:
         print("No configuration defined for this network.")
         return
-    whitelist_start = datetime.fromisoformat(config.get("whitelist_start"))
-    auction_start = datetime.fromisoformat(config.get("auction_start"))
+    whitelist_sale_start = datetime.fromisoformat(config.get("whitelist_sale_start"))
+    public_sale_start = datetime.fromisoformat(config.get("public_sale_start"))
     qbm = QBM.deploy(
         config.get("proxy_address"),
-        int(whitelist_start.timestamp()),
-        int(auction_start.timestamp()),
+        int(whitelist_sale_start.timestamp()),
+        int(public_sale_start.timestamp()),
         {"from": account},
         publish_source=config.get("verify"),
     )
