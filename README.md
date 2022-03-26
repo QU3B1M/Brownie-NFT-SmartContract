@@ -13,6 +13,7 @@ Follow this steps to deploy your own instance of this contract.
 1. **Update the contract _(`contracts/QBM.sol`)_**:
     - Update this file name to your collection name.
     - Update this contract name _(`QBM.sol: line 11`)_ to the name of your collection
+    - Update the collection name and symbol _(`QBM.sol: line 32`)_
     - Set the constants values to fit your needs _(`QBM.sol: line 13 to line 18`)_
     - Set the base URIs _(`QBM.sol: line 24 to line 25`)_
     - Update all the `require` messages in the file _(change QBM to your contract name.)_
