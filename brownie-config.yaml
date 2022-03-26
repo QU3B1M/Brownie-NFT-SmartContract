@@ -8,13 +8,13 @@ dotenv: .env
 networks:
     development:
         proxy_address: "0x0000000000000000000000000000000000000000"
-        whitelist_start: "2022-04-01"
-        auction_start: "2022-04-01"
+        whitelist_start: "2022-04-01 01:00:00+00:00"
+        auction_start: "2022-04-02 01:00:00+00:00"
         verify: False
     ganache:
         proxy_address: "0x0000000000000000000000000000000000000000"
-        whitelist_start: "2022-04-01"
-        auction_start: "2022-04-01"
+        whitelist_start: "2022-04-01 01:00:00+00:00"
+        auction_start: "2022-04-02 01:00:00+00:00"
         verify: False
     rinkeby:
         proxy_address: "0x1E525EEAF261cA41b809884CBDE9DD9E1619573A"

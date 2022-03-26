@@ -8,7 +8,8 @@ def deploy_qbm():
     account = get_account()
     config = get_config()
     if not config:
-        return False
+        print("No configuration defined for this network.")
+        return
     whitelist_start = datetime.fromisoformat(config.get("whitelist_start"))
     auction_start = datetime.fromisoformat(config.get("auction_start"))
     qbm = QBM.deploy(
