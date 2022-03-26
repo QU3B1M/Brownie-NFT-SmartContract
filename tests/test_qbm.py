@@ -176,3 +176,25 @@ def test_public_mint_five(contract, account, start_public_sale):
     # Assert
     assert contract.balanceOf(account) == 5
     assert contract.balance() == contract.PUBLIC_PRICE() * 5
+
+# ------Test-Dev-Mint------
+
+def test_dev_mint(contract, accounts):
+    # Act (send some extra eth to test the refund)
+    contract.devMint(accounts[1], 1, {"from": accounts[0]})
+    # Assert
+    assert contract.balanceOf(accounts[1]) == 1
+
+def test_dev_mint_five(contract, accounts):
+    # Act
+    contract.devMint(accounts[1], 5, {"from": accounts[0]})
+    # Assert
+    assert contract.balanceOf(accounts[1]) == 5
+
+def test_dev_mint_all_reserved(contract, accounts):
+    # Act
+    contract.devMint(accounts[1], contract.SUPPLY_FOR_DEVS(), {"from": accounts[0]})
+    # Assert
+    with brownie.reverts("QBM: Exceeds the mints reserved for devs."):
+        contract.devMint(accounts[1], 1, {"from": accounts[0]})
+    assert contract.balanceOf(accounts[1]) == contract.SUPPLY_FOR_DEVS()
