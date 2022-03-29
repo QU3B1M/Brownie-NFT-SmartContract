@@ -9,7 +9,7 @@ from scripts import helpers, deploy_contract
 
 
 @pytest.fixture
-def dev_account():
+def account():
     yield helpers.get_account()
 
 
@@ -55,7 +55,7 @@ def test_prices(contract):
 
 def test_seed_whitelist(contract, accounts):
     # Act
-    contract.seedWhitelist([accounts[0], accounts[1], accounts[2]], [1, 1, 2])
+    contract.registerWhitelist([accounts[0], accounts[1], accounts[2]], [1, 1, 2])
     # Assert
     assert contract.whitelist(accounts[0]) == 1
     assert contract.whitelist(accounts[1]) == 1
@@ -65,72 +65,72 @@ def test_seed_whitelist(contract, accounts):
 def test_seed_whitelist_empty(contract):
     # Act/Assert
     with brownie.reverts("QBM: No accounts provided."):
-        contract.seedWhitelist([], [])
+        contract.registerWhitelist([], [])
 
 
 def test_seed_whitelist_accounts_and_amounts_not_matching(contract, accounts):
     # Act/Assert
     with brownie.reverts("QBM: Amounts and accounts don't match."):
-        contract.seedWhitelist([accounts[0], accounts[1]], [1, 2, 3])
+        contract.registerWhitelist([accounts[0], accounts[1]], [1, 2, 3])
 
 
 # ------Test-Whitelist-Mint------
 
 
-def test_whitelist_mint(contract, dev_account, start_whitelist_sale):
+def test_whitelist_mint(contract, account, start_whitelist_sale):
     # Arrange
-    contract.seedWhitelist([dev_account], [1])
+    contract.registerWhitelist([account], [1])
     # Act (send some extra eth to test the refund)
-    contract.whitelistMint({"from": dev_account, "value": Web3.toWei(0.5, "ether")})
+    contract.whitelistMint({"from": account, "value": Web3.toWei(0.5, "ether")})
     # Assert
     assert contract.balance() == contract.WHITELIST_PRICE()
-    assert contract.balanceOf(dev_account) == 1
+    assert contract.balanceOf(account) == 1
 
 
-def test_whitelist_mint_before_starts(contract, dev_account):
+def test_whitelist_mint_before_starts(contract, account):
     # Arrange
-    contract.seedWhitelist([dev_account], [1])
+    contract.registerWhitelist([account], [1])
     # Act/Assert
     with brownie.reverts("QBM: Whitelist sale has not started yet."):
-        contract.whitelistMint({"from": dev_account, "value": Web3.toWei(0.5, "ether")})
+        contract.whitelistMint({"from": account, "value": Web3.toWei(0.5, "ether")})
 
 
-def test_whitelist_mint_with_no_reservation(contract, dev_account, start_whitelist_sale):
+def test_whitelist_mint_with_no_reservation(contract, account, start_whitelist_sale):
     # Act/Assert
     with brownie.reverts("QBM: User has no mints reserved."):
-        contract.whitelistMint({"from": dev_account, "value": Web3.toWei(0.5, "ether")})
+        contract.whitelistMint({"from": account, "value": Web3.toWei(0.5, "ether")})
 
 
-def test_whitelist_mint_more_than_permited(contract, dev_account, start_whitelist_sale):
+def test_whitelist_mint_more_than_permited(contract, account, start_whitelist_sale):
     # Arrange
-    contract.seedWhitelist([dev_account], [6])
+    contract.registerWhitelist([account], [6])
     for _ in range(5):
-        contract.whitelistMint({"from": dev_account, "value": Web3.toWei(5, "ether")})
+        contract.whitelistMint({"from": account, "value": Web3.toWei(5, "ether")})
     # Act/Assert
     with brownie.reverts("QBM: Exceeds the max amount per user."):
-        contract.whitelistMint({"from": dev_account, "value": Web3.toWei(5, "ether")})
+        contract.whitelistMint({"from": account, "value": Web3.toWei(5, "ether")})
 
-    assert contract.balanceOf(dev_account) == 5
+    assert contract.balanceOf(account) == 5
     assert contract.balance() == contract.WHITELIST_PRICE() * 5
 
 
-def test_whitelist_mint_withou_enough_eth(contract, dev_account, start_whitelist_sale):
+def test_whitelist_mint_withou_enough_eth(contract, account, start_whitelist_sale):
     # Arrange
-    contract.seedWhitelist([dev_account], [1])
+    contract.registerWhitelist([account], [1])
     # Act/Assert
     with brownie.reverts("QBM: Not enough ETH."):
-        contract.whitelistMint({"from": dev_account, "value": Web3.toWei(0.01, "ether")})
+        contract.whitelistMint({"from": account, "value": Web3.toWei(0.01, "ether")})
 
 
 # ------Test-Public-Mint------
 
 
-def test_public_mint(contract, dev_account, start_public_sale):
+def test_public_mint(contract, account, start_public_sale):
     # Act (send some extra eth to test the refund)
-    contract.publicMint(1, {"from": dev_account, "value": Web3.toWei(5, "ether")})
+    contract.publicMint(1, {"from": account, "value": Web3.toWei(5, "ether")})
     # Assert
     assert contract.balance() == contract.PUBLIC_PRICE()
-    assert contract.balanceOf(dev_account) == 1
+    assert contract.balanceOf(account) == 1
 
 
 def test_public_mint_before_starts(contract, accounts):
@@ -139,23 +139,23 @@ def test_public_mint_before_starts(contract, accounts):
         contract.publicMint(1, {"from": accounts[0], "value": Web3.toWei(5, "ether")})
 
 
-def test_public_mint_without_enough_eth(contract, dev_account, start_public_sale):
+def test_public_mint_without_enough_eth(contract, account, start_public_sale):
     # Act/Assert
     with brownie.reverts("QBM: Not enough ETH."):
-        contract.publicMint(1, {"from": dev_account, "value": Web3.toWei(0.01, "ether")})
+        contract.publicMint(1, {"from": account, "value": Web3.toWei(0.01, "ether")})
 
 
-def test_public_mint_more_than_permited(contract, dev_account, start_public_sale):
+def test_public_mint_more_than_permited(contract, account, start_public_sale):
     # Act/Assert
     with brownie.reverts("QBM: Exceeds the max amount per user."):
-        contract.publicMint(6, {"from": dev_account, "value": Web3.toWei(6, "ether")})
-    assert contract.balanceOf(dev_account) == 0
+        contract.publicMint(6, {"from": account, "value": Web3.toWei(6, "ether")})
+    assert contract.balanceOf(account) == 0
     # Now with one correctly minted NFT trying to mint 5 more.
-    contract.publicMint(1, {"from": dev_account, "value": Web3.toWei(6, "ether")})
+    contract.publicMint(1, {"from": account, "value": Web3.toWei(6, "ether")})
     with brownie.reverts("QBM: Exceeds the max amount per user."):
-        contract.publicMint(5, {"from": dev_account, "value": Web3.toWei(6, "ether")})
+        contract.publicMint(5, {"from": account, "value": Web3.toWei(6, "ether")})
     # Assert Balances
-    assert contract.balanceOf(dev_account) == 1
+    assert contract.balanceOf(account) == 1
     assert contract.balance() == contract.PUBLIC_PRICE()
 
 
@@ -171,11 +171,11 @@ def test_public_mint_all_the_nfts(contract, accounts, start_public_sale):
     assert contract.balance() == contract.PUBLIC_PRICE() * contract.MAX_SUPPLY()
 
 
-def test_public_mint_five(contract, dev_account, start_public_sale):
+def test_public_mint_five(contract, account, start_public_sale):
     # Act
-    contract.publicMint(5, {"from": dev_account, "value": Web3.toWei(5, "ether")})
+    contract.publicMint(5, {"from": account, "value": Web3.toWei(5, "ether")})
     # Assert
-    assert contract.balanceOf(dev_account) == 5
+    assert contract.balanceOf(account) == 5
     assert contract.balance() == contract.PUBLIC_PRICE() * 5
 
 
@@ -205,7 +205,7 @@ def test_dev_mint_all_reserved(contract, accounts):
     assert contract.balanceOf(accounts[1]) == contract.SUPPLY_FOR_DEVS()
 
 
-def test_dev_mint_is_over(contract, dev_account, start_whitelist_sale):
+def test_dev_mint_is_over(contract, account, start_whitelist_sale):
     # Act/Assert
     with brownie.reverts("QBM: Dev mint is over."):
-        contract.devMint(dev_account, 1, {"from": dev_account})
+        contract.devMint(account, 1, {"from": account})

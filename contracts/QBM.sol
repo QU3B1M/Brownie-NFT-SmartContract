@@ -21,7 +21,7 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
     uint256 public immutable publicSaleStartTime;
     uint256 public immutable whitelistSaleStartTime;
     // Variables: Next token ID, Base and Contracr URIs & Whitelist.
-    string public baseURI = "";
+    string private _baseTokenURI = "";
     string private _contractURI = "";
     mapping(address => uint256) public whitelist;
 
@@ -81,7 +81,7 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
     }
 
     /// @notice Register the seed whitelist, only callable by owner.
-    function seedWhitelist(address[] calldata accounts, uint256[] calldata amounts) external onlyOwner {
+    function registerWhitelist(address[] calldata accounts, uint256[] calldata amounts) external onlyOwner {
         require(accounts.length > 0, "QBM: No accounts provided.");
         require(accounts.length == amounts.length, "QBM: Amounts and accounts don't match.");
         for (uint256 i = 0; i < accounts.length; i++) {
@@ -90,8 +90,8 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
     }
 
     /// @notice Base URI setter, only callable by contract owner.
-    function setBaseURI(string memory newBaseURI) external onlyOwner {
-        baseURI = newBaseURI;
+    function setBaseURI(string calldata newBaseURI) external onlyOwner {
+        _baseTokenURI = newBaseURI;
     }
 
     /// @notice Contract URI setter, only callable by contract owner.
@@ -121,12 +121,13 @@ contract QBM is ERC721A, Ownable, ReentrancyGuard {
         }
     }
 
+    /// @notice Set the first token ID as 1.
     function _startTokenId() internal pure override returns (uint256) {
         return 1;
     }
 
-    /// @notice Retrieves the baseURI, this will be called from ERC721.
-    function _baseURI() internal override view returns (string memory){
-        return baseURI;
+    /// @notice Retrieves the baseURI, this will be called from ERC721A.
+    function _baseURI() internal view virtual override returns (string memory) {
+        return _baseTokenURI;
     }
 }
