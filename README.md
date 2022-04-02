@@ -8,6 +8,10 @@ You can use this contract to create your NFT Collection just by updating some va
 
 Follow this steps to deploy your own instance of this contract.
 
+Clone and open the project:
+- `git clone https://github.com/QU3B1M/brownie-nft-smartcontract.git`
+- `cd brownie-nft-smartcontract`
+
 ### Adapting the Contract and Environment
 
 1. **Update the contract _(`contracts/QBM.sol`)_**:
@@ -17,9 +21,11 @@ Follow this steps to deploy your own instance of this contract.
     - Set the constants values to fit your needs _(`QBM.sol: line 13 to line 18`)_
     - Set the base URIs _(`QBM.sol: line 24 to line 25`)_
     - Update all the `require` messages in the file _(change QBM to your contract name.)_
+
 2. **Update the deploy script _(`scripts/deploy.py`)_**:
     - Update the import, change `QBM` to the name of your contract _(`deploy.py: line 2`)_
     - Update the contract to deploy in the `deploy_contract` function _(`deploy.py line 8`)_ 
+
 3. **Update the `.env` file _(`.env`)_**
     - Set the whitelist sale start date in the format `yyyy-mm-dd` _(`WHITELIST_SALE_START`)_
     - Set the public sale start date in the format `yyyy-mm-dd`_(`PUBLIC_SALE_START`)_
