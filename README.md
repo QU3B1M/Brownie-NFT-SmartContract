@@ -1,4 +1,4 @@
-# Brownie NFT SmartContract (ERC721A)
+# Optimized NFT SmartContract (ERC721A)
 
 NFT contract that use ERC721A to significantly reduce the gas consumption.\
 You can use this contract to create your NFT Collection just by updating some values\
